@@ -2,11 +2,11 @@
 import { Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoutes';
 import DashboardLayout from '../layouts/DashboardLayout';
-import Home from '../components/Home';
 import Profile from '../pages/Profile';
 import Goal from '../pages/Goal';
 import Feedback from '../pages/Feedback';
 import PIP from '../pages/Pip';
+import DashboardHome from '../pages/DashboardHome';
 
 const PrivateRoutes = () => {
   return (
@@ -21,7 +21,7 @@ const PrivateRoutes = () => {
         }
       >
         {/* Nested dashboard routes */}
-        <Route index element={<Home />} />                {/* /dashboard (default to Home) */}
+        <Route index element={<DashboardHome />} />                {/* /dashboard (default to Home) */}
         <Route path="profile" element={<Profile />} />     {/* /dashboard/profile */}
         <Route path="goal" element={<Goal />} />           {/* /dashboard/goal */}
         <Route path="feedback" element={<Feedback />} />   {/* /dashboard/feedback */}
