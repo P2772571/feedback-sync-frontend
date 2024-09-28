@@ -73,6 +73,12 @@ const initialState = {
   resetPasswordMessage: null,   // Store the message from reset password request
 };
 
+// -------------------- Set User after Profile Update  --------------------
+const setUserAfterProfileUpdate = (state, action) => {
+  state.user = action.payload;
+  localStorage.setItem('user', JSON.stringify(action.payload));  // Save the updated user data in localStorage
+}
+
 // -------------------- Auth Slice --------------------
 const authSlice = createSlice({
   name: 'auth',
@@ -80,6 +86,7 @@ const authSlice = createSlice({
   reducers: {
     // Logout reducer
     logout: logoutUser,
+    setUser: setUserAfterProfileUpdate,
 
     // Clear errors and messages when moving between pages or after an action
     clearErrorsAndMessages: (state) => {
@@ -154,5 +161,5 @@ const authSlice = createSlice({
 });
 
 // Export actions and reducer
-export const { logout, clearErrorsAndMessages } = authSlice.actions;
+export const { logout, clearErrorsAndMessages, setUser } = authSlice.actions;
 export default authSlice.reducer;
