@@ -21,8 +21,8 @@ const SidebarMain = () => {
     manager: [
       { name: 'Dashboard', icon: <Dashboard />, path: '/dashboard' },
       { name: 'Feedback', icon: <Feedback />, path: '/dashboard/feedback' },
-      { name: 'Manage Goals', icon: <Assignment />, path: '/dashboard/manage-goals' },
-      { name: 'Manage PIPs', icon: <Assignment />, path: '/dashboard/manage-pips' },
+      { name: 'Manage Goals', icon: <Assignment />, path: '/dashboard/goals' },
+      { name: 'Manage PIPs', icon: <Assignment />, path: '/dashboard/pips' },
       { name: 'Profile', icon: <Person />, path: '/dashboard/profile' },
     ],
     admin: [
@@ -34,13 +34,14 @@ const SidebarMain = () => {
   const itemsToDisplay = menuItems[role] || [];
 
   return (
-    <Box sx={{ padding: 5, textAlign: 'center', backgroundColor: "#f8f8f8", height: '100%', borderRadius: 5 }}>
+    <Box sx={{ paddingX:4 , paddingY:2 , textAlign: 'center', backgroundColor: "#f8f8f8", height: '100%', borderRadius: 5 }}>
       <List>
         {itemsToDisplay.map((item, index) => (
           <ListItem
             button
             component={NavLink}
             to={item.path}
+            state={{ title:item.name}}
             key={index}
             end
             sx={{
