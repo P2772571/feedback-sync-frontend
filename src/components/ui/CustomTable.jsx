@@ -1,4 +1,3 @@
-
 import PropTypes from 'prop-types';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
@@ -7,6 +6,8 @@ const styles = {
       backgroundColor: '#F5F5F5',
         borderRadius: 5,
         boxShadow: 2,
+        maxHeight: '350px',  // Limit the height of the table to 400px
+        overflowY: 'auto',    // Enable vertical scrolling inside the table
     },
     tableHeader: {
         backgroundColor: '#E9E9E9',
@@ -17,14 +18,21 @@ const styles = {
         textAlign: 'center',
         fontWeight: 'bold',
     },
-    tableCellRow:{
+    tableRow: {
+        cursor: 'pointer',  // Make rows clickable
+        '&:hover': {
+            backgroundColor: '#E0E0E0',  // Hover effect to indicate clickable rows
+        }
+    },
+
+    tableCell: {
         textAlign: 'center',
-
-    }
-
+        cursor: 'pointer',  // Make rows clickable
+        
+    },
 };
 
-function CustomTable({ columns, rows }) {
+function CustomTable({ columns, rows, onRowClick }) {
     return (
         <TableContainer component={Paper} sx={styles.tableContainer}>
             <Table>
@@ -39,9 +47,12 @@ function CustomTable({ columns, rows }) {
                 </TableHead>
                 <TableBody>
                     {rows.map((row, rowIndex) => (
-                        <TableRow key={rowIndex}>
+                        <TableRow sx={styles.tableRow}
+                            key={rowIndex}
+                            onClick={() => onRowClick(row)}  // Trigger the row click event
+                        >
                             {row.map((cell, cellIndex) => (
-                                <TableCell key={cellIndex} sx={styles.tableCellRow}>
+                                <TableCell key={cellIndex} sx={styles.tableCell}>
                                     {cell}
                                 </TableCell>
                             ))}
@@ -52,9 +63,11 @@ function CustomTable({ columns, rows }) {
         </TableContainer>
     );
 }
+
 CustomTable.propTypes = {
     columns: PropTypes.arrayOf(PropTypes.string).isRequired,
     rows: PropTypes.arrayOf(PropTypes.array).isRequired,
+    onRowClick: PropTypes.func.isRequired,  // Add onRowClick prop
 };
 
 export default CustomTable;
