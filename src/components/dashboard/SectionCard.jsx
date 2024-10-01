@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Card, CardContent, Typography, Link } from '@mui/material';
-
+import CardItem from '../ui/CustomCardItem';
+import CustomModal from '../ui/CustomModal';
 
 const styles = {
     card: {
@@ -20,62 +21,66 @@ const styles = {
         alignItems: 'center',
         marginBottom: 2,
         paddingX: 2
-    },
-    cardItem: {
-        backgroundColor: '#f5f5f5',
-        borderRadius: 3,
-        marginY: 2,
-        padding: 2
-    
-    },
-    ItemInfo: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        fontSize: 12,
-        color: '#4CAFF7'
     }
-
-}
-
-
+};
 
 function SectionCard({ title, items }) {
+    const [openModal, setOpenModal] = useState(false);
+
+    const handleOpenModal = () => setOpenModal(true);
+    const handleCloseModal = () => setOpenModal(false);
+
     return (
-        <Card sx={styles.card}>
-            <CardContent sx={styles.cardContent}>
-                <Box sx={styles.cardTitle}>
-                    <Typography variant="h4">{title}</Typography>
-                    <Link href="#" variant="body2" sx={{}}>
-                        View all
-                    </Link>
-                </Box>
-                <Box  sx={styles.cardItem}>
-                    <Typography variant="body1">
-                        <strong>Title:</strong> Title One
-                    </Typography>
-                    <Box sx={styles.ItemInfo}>
-                        <Typography variant="body2">Progress: 30%</Typography>
-                        <Typography variant="body2">Due Date: Today</Typography>
+        <>
+            {/* Main Card */}
+            <Card sx={styles.card}>
+                <CardContent sx={styles.cardContent}>
+                    <Box sx={styles.cardTitle}>
+                        <Typography variant="h4">{title}</Typography>
+                        <Link href="#" variant="body2" onClick={handleOpenModal}>
+                            View all
+                        </Link>
                     </Box>
-                </Box>
-                <Box  sx={styles.cardItem}>
-                    <Typography variant="body1">
-                        <strong>Title:</strong> Title One
-                    </Typography>
-                    <Box sx={styles.ItemInfo}>
-                        <Typography variant="body2">Progress: 30%</Typography>
-                        <Typography variant="body2">Due Date: Today</Typography>
-                    </Box>
-                </Box>
-            </CardContent>
-        </Card>
+
+                    {/* Display a few items in the card */}
+                    {items.slice(0, 2).map((item, index) => (
+                        <CardItem
+                            key={index}
+                            title={item.title}
+                            progress={item.progress}
+                            dueDate={item.dueDate}
+                        />
+                    ))}
+                </CardContent>
+            </Card>
+
+            {/* Use CustomModal directly to display all items */}
+            <CustomModal
+                open={openModal}
+                onClose={handleCloseModal}
+                title={`All ${title}`}
+            >
+                {/* Render all items in the modal */}
+                {items.map((item, index) => (
+                    <CardItem
+                        key={index}
+                        title={item.title}
+                        progress={item.progress}
+                        dueDate={item.dueDate}
+                    />
+                ))}
+            </CustomModal>
+        </>
     );
 }
+
 SectionCard.propTypes = {
     title: PropTypes.string.isRequired,
-    items: PropTypes.array.isRequired,
+    items: PropTypes.arrayOf(PropTypes.shape({
+        title: PropTypes.string.isRequired,
+        progress: PropTypes.number.isRequired,
+        dueDate: PropTypes.string.isRequired,
+    })).isRequired,
 };
 
 export default SectionCard;
-

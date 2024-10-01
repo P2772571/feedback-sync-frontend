@@ -11,7 +11,7 @@ const Greeeting = () => {
 
     return (
         <Box sx={{
-            padding: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            paddingX:5, paddingY:2 , display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             backgroundColor: '#ffffff',
             borderRadius: 5,
             marginY: 3

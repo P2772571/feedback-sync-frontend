@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 const TitleBar = ({ title }) => {
   return (
     <Box sx={{ 
-      padding: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' ,
+      paddingX: 5,paddingY:3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' ,
       backgroundColor:'#ffffff',
       borderRadius:5
       
