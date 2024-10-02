@@ -24,7 +24,7 @@ const styles = {
     }
 };
 
-function SectionCard({ title, items }) {
+function SectionCard({ title, items, role }) {
     const [openModal, setOpenModal] = useState(false);
 
     const handleOpenModal = () => setOpenModal(true);
@@ -37,9 +37,9 @@ function SectionCard({ title, items }) {
                 <CardContent sx={styles.cardContent}>
                     <Box sx={styles.cardTitle}>
                         <Typography variant="h4">{title}</Typography>
-                        <Link href="#" variant="body2" onClick={handleOpenModal}>
+                        {/* <Link href="#" variant="body2" onClick={handleOpenModal}>
                             View all
-                        </Link>
+                        </Link> */}
                     </Box>
 
                     {/* Display a few items in the card */}
@@ -81,6 +81,7 @@ SectionCard.propTypes = {
         progress: PropTypes.number.isRequired,
         dueDate: PropTypes.string.isRequired,
     })).isRequired,
+    role:PropTypes.string.isRequired,
 };
 
 export default SectionCard;
