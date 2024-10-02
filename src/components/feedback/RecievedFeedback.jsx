@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
-import { Card, CardContent, Typography, Link } from '@mui/material';
+import { Card, CardContent, Typography, Link, colors } from '@mui/material';
 import { Box } from '@mui/system';
 import CustomTable from '../ui/CustomTable';
 import { useState } from 'react';
 import CustomModal from '../ui/CustomModal';
+import { useSelector } from 'react-redux';
 
 // Styles
 const styles = {
@@ -41,6 +42,7 @@ function RecievedFeedbacks({ feedbacks }) {
     const [openFeedbackDetail, setOpenFeedbackDetail] = useState(false);  // State for feedback detail modal
     const [selectedFeedback, setSelectedFeedback] = useState(null);  // Store clicked feedback
 
+
     const handleClickOpenViewAll = () => setOpenViewAll(true);  // Open "View all" modal
     const handleCloseViewAll = () => setOpenViewAll(false);  // Close "View all" modal
 
@@ -53,31 +55,45 @@ function RecievedFeedbacks({ feedbacks }) {
         setOpenFeedbackDetail(false);  // Close feedback detail modal, keep "View All" open
     };
 
+
+
+
     // Ensure feedbacks is an array before mapping over it
-    const columns = ['SR', 'Employee Name', 'Feedback Preview', 'Date'];
+    const columns = ['SR', 'Name', ' Preview', 'Date'];
     const rows = Array.isArray(feedbacks)
-        ? feedbacks.map((feedback, index) => [
+        ? feedbacks?.map((feedback, index) => [
             index + 1,
-            feedback.employeeName,
-            feedback.feedbackPreview.length > 15
-                ? `${feedback.feedbackPreview.substring(0, 15)}...`  // Truncate feedback preview to 15 characters
-                : feedback.feedbackPreview,
-            feedback.date
+            feedback?.giverName,
+            feedback?.content.length > 15
+                ? `${feedback?.content.substring(0, 15)}...`  // Truncate feedback preview to 15 characters
+                : feedback?.content,
+            feedback?.createdAt
         ])
         : [];  // If feedbacks is not an array, fallback to an empty array
 
     return (
         <>
+        
             <Card sx={styles.card}>
                 <CardContent sx={styles.cardContent}>
                     <Box sx={styles.cardTitle}>
                         <Typography variant="h4">Recieved Feedbacks</Typography>
-                        <Link href="#" variant="body2" onClick={handleClickOpenViewAll}>
+                        <Link href="#" variant="body2" onClick={handleClickOpenViewAll}  >
                             View all
                         </Link>
                     </Box>
-
-                    <CustomTable columns={columns} rows={rows.slice(0, 6)} onRowClick={handleRowClick} /> {/* Pass onRowClick */}
+                    {
+                        (feedbacks?.length === 0 || feedbacks == null) ? (
+                            <Typography variant='body2' sx={{
+                                textAlign:'center',
+                                padding:4,
+                                color: colors.red[400]
+                            }}  > No Feedback received till now. </Typography>
+                        ): (
+                            <CustomTable columns={columns} rows={rows?.slice(0, 6)} onRowClick={handleRowClick} />
+                        )
+                    }
+                    
                 </CardContent>
             </Card>
 
