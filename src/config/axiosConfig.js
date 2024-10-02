@@ -13,7 +13,6 @@ axiosInstance.interceptors.request.use((config) => {
   const user = JSON.parse(localStorage.getItem('user'));  // Retrieve user data from localStorage
   
   if (user && user.accessToken) {
-    console.log("User token: ", user.accessToken);
     
     config.headers['Authorization'] = `Bearer ${user.accessToken}`;  // Attach the token to the header
   }
@@ -37,6 +36,7 @@ axiosInstance.interceptors.response.use(
         // Handle unauthorized access (e.g., force logout)
         localStorage.removeItem('user');  // Clear the token if unauthorized
         window.location.href = '/login';  // Redirect to login
+        console.log("Unauthorized access: Please log in to access this resource.");
       } else if (error.response.status === 403) {
         console.error("Forbidden access: You don't have permission to perform this action.");
         // Handle forbidden access accordingly

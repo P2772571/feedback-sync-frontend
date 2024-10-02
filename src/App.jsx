@@ -64,16 +64,22 @@ import CssBaseline from '@mui/material/CssBaseline';  // CSS baseline for consis
 import store from './redux/store';  // Redux store
 import theme from './theme/theme';  // Import the custom theme
 import { ThemeProvider } from '@emotion/react';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';  // Import AdapterDateFns
 import AppRoutes from './routes/AppRoutes';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const App = () => {
 
   return (
     <Provider store={store}>  {/* Wrap the app with Redux provider */}
-    <ThemeProvider theme={theme}>
-    <CssBaseline />
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
       </ThemeProvider>
-      <AppRoutes />
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <AppRoutes />
+      </LocalizationProvider>
     </Provider>
   );
 };
