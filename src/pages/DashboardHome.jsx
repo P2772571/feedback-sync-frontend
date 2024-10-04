@@ -8,31 +8,6 @@ import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import SingleInfoCard from '../components/dashboard/SingleInfoCard';
 
-
-// Dummy Data 
-const feedbacks = [
-  { employeeName: 'Osama', feedbackPreview: 'You are a Great Developer ', date: '20-20-1020' },
-  { employeeName: 'Saad', feedbackPreview: 'You are a Great Developer', date: '20-20-1020' },
-  { employeeName: 'Rizwan', feedbackPreview: 'You are a Great Developer', date: '20-20-1020' },
-  { employeeName: 'Osama', feedbackPreview: 'You are a Great Developer', date: '20-20-1020' },
-  { employeeName: 'Saad', feedbackPreview: 'You are a Great Developer', date: '20-20-1020' },
-  { employeeName: 'Rizwan', feedbackPreview: 'You are a Great Developer', date: '20-20-1020' },
-  { employeeName: 'Osama', feedbackPreview: 'You are a Great Developer', date: '20-20-1020' },
-  { employeeName: 'Saad', feedbackPreview: 'You are a Great Developer', date: '20-20-1020' },
-  { employeeName: 'Rizwan', feedbackPreview: 'You are a Great Developer', date: '20-20-1020' },
-  { employeeName: 'Osama', feedbackPreview: 'You are a Great Developer', date: '20-20-1020' },
-  { employeeName: 'Saad', feedbackPreview: 'You are a Great Developer', date: '20-20-1020' },
-  { employeeName: 'Rizwan', feedbackPreview: 'You are a Great Developer', date: '20-20-1020' }
-];
-
-const goals = [
-  { title: 'Increase Sales by 15%', progress: 45, dueDate: '2024-10-15' },
-  { title: 'Launch New Product Line', progress: 30, dueDate: '2024-12-01' },
-  { title: 'Improve Customer Retention', progress: 60, dueDate: '2024-11-20' },
-  { title: 'Reduce Operational Costs by 10%', progress: 25, dueDate: '2024-11-30' },
-  { title: 'Enhance Employee Training Program', progress: 70, dueDate: '2024-10-05' }
-];
-
 const pips = [
   { title: 'Improve Time Management', progress: 20, dueDate: '2024-09-30' },
   { title: 'Reduce Coding Errors by 25%', progress: 50, dueDate: '2024-10-10' },
@@ -49,10 +24,9 @@ function DashboardHome() {
   const feedbacks = useSelector((state) => state.feedbacks.feedbacks)
   const user = useSelector((state) => state.auth.user)
   const users = useSelector((state) => state.users.users)
-
+  const managerAssignedGoals = useSelector((state) => state.goals.managerAssignedGoals);
   const role = user?.roles[0] || undefined
-
-
+  const userGoals = useSelector((state) => state.goals.userGoals)
 
   return (
     <>
@@ -71,7 +45,7 @@ function DashboardHome() {
         {role === "EMPLOYEE" ? (
         <>
           <Box sx={{ flex: 1 }}>
-          <SectionCard title={'Active Goals'} items={goals} />
+          <SectionCard title={'Active Goals'} items={userGoals} />
         </Box>
         <Box sx={{ flex: 1 }}>
           <SectionCard title={'Active Pips'} items={pips} />
@@ -88,7 +62,7 @@ function DashboardHome() {
             <SingleInfoCard title="Employees" value={users.length}  />
             <SingleInfoCard title="Recieved Feedbacks" value={feedbacks?.received?.length} />
             <SingleInfoCard title="Given Feedbacks" value={feedbacks?.given?.length} />
-            <SingleInfoCard title="Assigned Goals" value={2} />
+            <SingleInfoCard title="Assigned Goals" value={managerAssignedGoals?.length} />
             <SingleInfoCard title="Assigned PIPs" value={2} />
 
 

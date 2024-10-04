@@ -10,6 +10,7 @@ const styles = {
         flexDirection: 'column',
         marginY: 2,
         borderRadius: 5,
+        minHeight:'300px'
     },
     cardContent: {
         paddingX: 4,
@@ -24,10 +25,9 @@ const styles = {
     }
 };
 
-function SectionCard({ title, items, role }) {
+function SectionCard({ title, items }) {
     const [openModal, setOpenModal] = useState(false);
 
-    const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
 
     return (
@@ -36,7 +36,7 @@ function SectionCard({ title, items, role }) {
             <Card sx={styles.card}>
                 <CardContent sx={styles.cardContent}>
                     <Box sx={styles.cardTitle}>
-                        <Typography variant="h4">{title}</Typography>
+                        <Typography sx={{color: '#4CAFF7'}} variant="h4">{title}</Typography>
                         {/* <Link href="#" variant="body2" onClick={handleOpenModal}>
                             View all
                         </Link> */}
@@ -46,7 +46,7 @@ function SectionCard({ title, items, role }) {
                     {items.slice(0, 2).map((item, index) => (
                         <CardItem
                             key={index}
-                            title={item.title}
+                            title={item.goalName}
                             progress={item.progress}
                             dueDate={item.dueDate}
                         />
@@ -64,7 +64,7 @@ function SectionCard({ title, items, role }) {
                 {items.map((item, index) => (
                     <CardItem
                         key={index}
-                        title={item.title}
+                        title={item.goalName}
                         progress={item.progress}
                         dueDate={item.dueDate}
                     />
@@ -77,7 +77,7 @@ function SectionCard({ title, items, role }) {
 SectionCard.propTypes = {
     title: PropTypes.string.isRequired,
     items: PropTypes.arrayOf(PropTypes.shape({
-        title: PropTypes.string.isRequired,
+        goalName: PropTypes.string.isRequired,
         progress: PropTypes.number.isRequired,
         dueDate: PropTypes.string.isRequired,
     })).isRequired,

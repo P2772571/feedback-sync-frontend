@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchProfile } from '../redux/profileSlice';
 import { fetchAllUsers, fetchAllManagedUsers } from '../redux/userSlice';
 import { fetchFeedbacks } from '../redux/feedbackSlice';
+import { fetchGoalsAssignedByManager, fetchGoalsOfUser, fetchAssignedGoalsToUser } from '../redux/goalSlice';
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
@@ -15,15 +16,14 @@ const DashboardLayout = () => {
   const profileLoading = useSelector((state) => state.profile.loading); // Profile loading state
   const usersLoading = useSelector((state) => state.users.loading); // Users loading state
   const profile = useSelector((state) => state.profile.profile);
-  const feedbackLoading = useSelector((state) => state.feedbacks.loading)
+  const goalsLoadig = useSelector((state) => state.goals.loading)
+  const feedbackLoading = useSelector((state) => state.feedbacks.loading);
   const users = useSelector((state) => state.users.users);
   const feedbacks = useSelector((state) => state.feedbacks.feedbacks);
 
   
-
-  
   // Derived loading state (when either profile or users are loading)
-  const loading = profileLoading || usersLoading  || feedbackLoading;
+  const loading = profileLoading || usersLoading  || feedbackLoading  || goalsLoadig;
 
 
   useEffect(() => {
@@ -41,12 +41,22 @@ const DashboardLayout = () => {
       if (user.id){
         // Fetch feedbacks
         dispatch(fetchFeedbacks(user.id));
+        if (user?.roles[0] === "MANAGER"){
+          dispatch(fetchGoalsAssignedByManager(user.id))
+        }
+        if (user?.roles[0] === "EMPLOYEE"){
+          dispatch(fetchGoalsOfUser(user.id));
+          console.log("User ID:", user.id, "Manager ID:", 3);
+          dispatch(fetchAssignedGoalsToUser({ userId: user.id, managerId: 3 }))
+        }
+        
       }
+      
     }
   }, [dispatch, user, user.id, user.roles]);
 
   // If still loading, show a spinner/loader
-  if (loading || !profile || !users || !user || !feedbacks) {
+  if (loading || !profile || !users || !user || !feedbacks ) {
 
     return (
       <Box 
