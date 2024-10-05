@@ -65,6 +65,11 @@ function Goal() {
   const [showTaskInput, setShowTaskInput] = useState(false); // State to control the task input visibility
   const [newTaskName, setNewTaskName] = useState(''); // State to store new task input
 
+  // Loading state for task/goal updates
+  const goalsLoading = useSelector((state) => state.goals.loading);
+  const tasksLoading = useSelector((state) => state.goals.tasksLoading);
+
+
   const dispatch = useDispatch();
 
   /**

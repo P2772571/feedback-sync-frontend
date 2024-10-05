@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Person, Email, Work } from '@mui/icons-material';
 import * as Yup from 'yup';
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateProfile } from '../../redux/profileSlice';
 import { logout, setUser } from '../../redux/auth/authSlice';
 import SnackbarExtended from '../ui/SnackBar';
@@ -15,6 +15,7 @@ function PersonalInformation({ user, profile }) {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  console.log(useSelector((state) => state.feedbacks.feedbacks))
 
 
   const dispatch = useDispatch();
@@ -28,6 +29,7 @@ function PersonalInformation({ user, profile }) {
     jobTitle: '',
     manager:"",
   });
+  
   
   // Effect to update initialValues when user or profile changes
   useEffect(() => {
@@ -263,9 +265,6 @@ function PersonalInformation({ user, profile }) {
                 textTransform: 'none',
                 fontWeight: 'bold',
                 backgroundColor: '#4CAFF7',
-                position: 'relative',
-                display: 'flex',
-                flexDirection: 'row-reverse',
               }}
             >
               {isSubmitting && <CircularProgress size={24} sx={{ position: 'absolute', left: '50%', top: '50%', marginLeft: '-12px', marginTop: '-12px' }} />}

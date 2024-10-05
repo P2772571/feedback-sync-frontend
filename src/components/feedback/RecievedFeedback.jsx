@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Card, CardContent, Typography, Link, colors } from '@mui/material';
+import { Card, CardContent, Typography, Link, colors, Skeleton } from '@mui/material';
 import { Box } from '@mui/system';
 import CustomTable from '../ui/CustomTable';
 import { useState } from 'react';
@@ -25,23 +25,21 @@ const styles = {
         marginBottom: 2,
         paddingX: 2
     },
-    tableContainer: {
-        borderRadius: 5,
-        boxShadow: 2,
-    },
-    tableHeader: {
-        backgroundColor: '#E9E9E9',
-        borderRadius: 5,
-        fontSize: 16,
-        fontWeight: 'bold'
+    skeletonRow: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginY: 1,
+        width: '100%',
     }
 };
 
-function RecievedFeedbacks({ feedbacks }) {
+function RecentFeedbacks({ feedbacks }) {
     const [openViewAll, setOpenViewAll] = useState(false);  // State for "View all" modal
     const [openFeedbackDetail, setOpenFeedbackDetail] = useState(false);  // State for feedback detail modal
     const [selectedFeedback, setSelectedFeedback] = useState(null);  // Store clicked feedback
 
+    const feedbackLoading = useSelector((state) => state.feedbacks.loadingFeedbacks);  // Fetch loading state for feedbacks
 
     const handleClickOpenViewAll = () => setOpenViewAll(true);  // Open "View all" modal
     const handleCloseViewAll = () => setOpenViewAll(false);  // Close "View all" modal
@@ -55,45 +53,53 @@ function RecievedFeedbacks({ feedbacks }) {
         setOpenFeedbackDetail(false);  // Close feedback detail modal, keep "View All" open
     };
 
-
-
-
     // Ensure feedbacks is an array before mapping over it
-    const columns = ['SR', 'Name', ' Preview', 'Date'];
+    const columns = ['SR', 'Name', 'Preview', 'Date'];
     const rows = Array.isArray(feedbacks)
         ? feedbacks?.map((feedback, index) => [
             index + 1,
-            feedback?.giverName,
-            feedback?.content.length > 15
-                ? `${feedback?.content.substring(0, 15)}...`  // Truncate feedback preview to 15 characters
+            feedback.giverName,
+            feedback?.content?.length > 15
+                ? `${feedback?.content?.substring(0, 15)}...`  // Truncate feedback preview to 15 characters
                 : feedback?.content,
-            feedback?.createdAt
+            feedback.createdAt
         ])
         : [];  // If feedbacks is not an array, fallback to an empty array
 
+    // Skeleton rows to display during loading
+    const skeletonRows = Array(3).fill().map((_, index) => (
+        <Box key={index} sx={styles.skeletonRow}>
+            <Skeleton variant="text" width="10%" height={30} />
+            <Skeleton variant="text" width="30%" height={30} />
+            <Skeleton variant="text" width="40%" height={30} />
+            <Skeleton variant="text" width="15%" height={30} />
+        </Box>
+    ));
+
     return (
         <>
-        
             <Card sx={styles.card}>
                 <CardContent sx={styles.cardContent}>
                     <Box sx={styles.cardTitle}>
-                        <Typography variant="h4">Recieved Feedbacks</Typography>
-                        <Link href="#" variant="body2" onClick={handleClickOpenViewAll}  >
+                        <Typography sx={{color: '#4CAFF7'}} variant="h4">Received Feedbacks</Typography>
+                        <Link href="#" variant="body2" onClick={handleClickOpenViewAll}>
                             View all
                         </Link>
                     </Box>
-                    {
-                        (feedbacks?.length === 0 || feedbacks == null) ? (
-                            <Typography variant='body2' sx={{
-                                textAlign:'center',
-                                padding:4,
-                                color: colors.red[400]
-                            }}  > No Feedback received till now. </Typography>
-                        ): (
-                            <CustomTable columns={columns} rows={rows?.slice(0, 6)} onRowClick={handleRowClick} />
-                        )
-                    }
-                    
+
+                    {feedbackLoading ? (
+                        <Box>
+                            {skeletonRows} {/* Skeleton rows during loading */}
+                        </Box>
+                    ) : (feedbacks?.length === 0 || feedbacks == null) ? (
+                        <Typography variant='body2' sx={{
+                            textAlign:'center',
+                            padding:4,
+                            color: colors.red[400]
+                        }}  > No Feedback received till now. </Typography>
+                    ) : (
+                        <CustomTable columns={columns} rows={rows?.slice(0, 3)} onRowClick={handleRowClick} />
+                    )}
                 </CardContent>
             </Card>
 
@@ -101,10 +107,22 @@ function RecievedFeedbacks({ feedbacks }) {
             <CustomModal
                 open={openViewAll}  // Keep this modal open all the time
                 onClose={handleCloseViewAll}
-                title="All Recieved Feedbacks"
+                title="All Feedbacks"
                 showSearch={false}  // Enable search in the "View all" modal
             >
-                <CustomTable columns={columns} rows={rows} onRowClick={handleRowClick} />  {/* Display all feedbacks in the modal, with row click handler */}
+                {feedbackLoading ? (
+                    <Box>
+                        {skeletonRows} {/* Show skeleton rows in modal during loading */}
+                    </Box>
+                ) : feedbacks?.length === 0 ? (
+                    <Typography variant='body2' sx={{
+                        textAlign:'center',
+                        padding:4,
+                        color: colors.red[400]
+                    }}  > No Feedback received till now. </Typography>
+                ) : (
+                    <CustomTable columns={columns} rows={rows} onRowClick={handleRowClick} /> 
+                )}
             </CustomModal>
 
             {/* Modal for feedback detail when a row is clicked */}
@@ -114,14 +132,20 @@ function RecievedFeedbacks({ feedbacks }) {
                 title="Feedback Details"
                 showSearch={false}  // Disable search in the row click modal
             >
-                {selectedFeedback ? (
+                {feedbackLoading ? (
+                    <Box sx={{ padding: 2 }}>
+                        <Skeleton variant="text" width="80%" height={30} />
+                        <Skeleton variant="text" width="100%" height={80} sx={{ marginY: 2 }} />
+                        <Skeleton variant="text" width="40%" height={30} />
+                    </Box>
+                ) : selectedFeedback ? (
                     <Box sx={{padding:2, gap:2}} >
-                        <Typography variant="body1"><strong>Employee Name:</strong> {selectedFeedback[1]}</Typography>
+                        <Typography variant="body1"><strong>Name:</strong> {selectedFeedback[1]}</Typography>
                         <Typography
                             variant="body1"
-                            sx={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}  // Enable text wrapping for feedback
+                            sx={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }} // Enable text wrapping for feedback
                         >
-                            <strong>Feedback:</strong> {feedbacks[selectedFeedback[0] - 1].feedbackPreview} {/* Display full feedback */}
+                            <strong>Feedback:</strong> {feedbacks[selectedFeedback[0] - 1].content} 
                         </Typography>
                         <Typography variant="body1"><strong>Date:</strong> {selectedFeedback[3]}</Typography>
                     </Box>
@@ -133,17 +157,17 @@ function RecievedFeedbacks({ feedbacks }) {
     );
 }
 
-RecievedFeedbacks.propTypes = {
+RecentFeedbacks.propTypes = {
     feedbacks: PropTypes.arrayOf(PropTypes.shape({
-        employeeName: PropTypes.string.isRequired,
-        feedbackPreview: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
+        giverName: PropTypes.string.isRequired,
+        createdAt: PropTypes.string.isRequired,
+        content: PropTypes.string.isRequired,
     })).isRequired,
 };
 
 // Set default props to prevent errors when no feedback is passed
-RecievedFeedbacks.defaultProps = {
+RecentFeedbacks.defaultProps = {
     feedbacks: [],
 };
 
-export default RecievedFeedbacks;
+export default RecentFeedbacks;

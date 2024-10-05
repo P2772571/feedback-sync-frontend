@@ -11,6 +11,7 @@ function Feedback() {
   const location = useLocation()
   const title = location.state?.title || "No Title Provided"
   const feedbacks = useSelector((state) => state.feedbacks.feedbacks)
+  console.log(feedbacks);
 
   const received = feedbacks?.received
   const given = feedbacks?.given

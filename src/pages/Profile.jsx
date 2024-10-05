@@ -20,8 +20,6 @@ function Profile() {
   return (
     <Box>
       <TitleBar title={title} />
-
-
       {/* Body of Profile */}
       <Box
         sx={

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Card, CardContent, Typography, Link } from '@mui/material';
+import { Box, Card, CardContent, Typography, Skeleton } from '@mui/material';
 import CardItem from '../ui/CustomCardItem';
 import CustomModal from '../ui/CustomModal';
+import { useSelector } from 'react-redux';
 
 const styles = {
     card: {
@@ -10,7 +11,7 @@ const styles = {
         flexDirection: 'column',
         marginY: 2,
         borderRadius: 5,
-        minHeight:'300px'
+        minHeight: '300px'
     },
     cardContent: {
         paddingX: 4,
@@ -25,10 +26,12 @@ const styles = {
     }
 };
 
-function SectionCard({ title, items }) {
+function SectionCard({ title, items, loading}) {
     const [openModal, setOpenModal] = useState(false);
 
-    const handleCloseModal = () => setOpenModal(false);
+    const handleCloseModal = () => setOpenModal(false)
+
+
 
     return (
         <>
@@ -36,21 +39,27 @@ function SectionCard({ title, items }) {
             <Card sx={styles.card}>
                 <CardContent sx={styles.cardContent}>
                     <Box sx={styles.cardTitle}>
-                        <Typography sx={{color: '#4CAFF7'}} variant="h4">{title}</Typography>
-                        {/* <Link href="#" variant="body2" onClick={handleOpenModal}>
-                            View all
-                        </Link> */}
+                        <Typography sx={{ color: '#4CAFF7' }} variant="h4">
+                            {title}
+                        </Typography>
                     </Box>
 
-                    {/* Display a few items in the card */}
-                    {items.slice(0, 2).map((item, index) => (
-                        <CardItem
-                            key={index}
-                            title={item.goalName}
-                            progress={item.progress}
-                            dueDate={item.dueDate}
-                        />
-                    ))}
+                    {/* Show Skeleton Loading if loading is true */}
+                    {loading ? (
+                        <>
+                            <Skeleton variant="rectangular" width="100%" height={80} sx={{ borderRadius: 5, marginBottom: 2, }} />
+                            <Skeleton variant="rectangular" width="100%" height={80} sx={{ borderRadius: 5 }} />
+                        </>
+                    ) : (
+                        items?.slice(0, 2).map((item, index) => (
+                            <CardItem
+                                key={index}
+                                title={item?.goalName || item?.title}
+                                progress={item?.progress}
+                                dueDate={item?.dueDate}
+                            />
+                        ))
+                    )}
                 </CardContent>
             </Card>
 
@@ -61,14 +70,22 @@ function SectionCard({ title, items }) {
                 title={`All ${title}`}
             >
                 {/* Render all items in the modal */}
-                {items.map((item, index) => (
-                    <CardItem
-                        key={index}
-                        title={item.goalName}
-                        progress={item.progress}
-                        dueDate={item.dueDate}
-                    />
-                ))}
+                {loading ? (
+                    <>
+                        <Skeleton variant="rectangular" width="100%" height={80} sx={{ borderRadius: 1, marginBottom: 2 }} />
+                        <Skeleton variant="rectangular" width="100%" height={80} sx={{ borderRadius: 1, marginBottom: 2 }} />
+                        <Skeleton variant="rectangular" width="100%" height={80} sx={{ borderRadius: 1 }} />
+                    </>
+                ) : (
+                    items.map((item, index) => (
+                        <CardItem
+                            key={index}
+                            title={item.goalName || item.title}
+                            progress={item.progress}
+                            dueDate={item.dueDate}
+                        />
+                    ))
+                )}
             </CustomModal>
         </>
     );
@@ -77,11 +94,11 @@ function SectionCard({ title, items }) {
 SectionCard.propTypes = {
     title: PropTypes.string.isRequired,
     items: PropTypes.arrayOf(PropTypes.shape({
-        goalName: PropTypes.string.isRequired,
+        goalName: PropTypes.string,
         progress: PropTypes.number.isRequired,
         dueDate: PropTypes.string.isRequired,
     })).isRequired,
-    role:PropTypes.string.isRequired,
+    loading: PropTypes.bool.isRequired, // Added the loading prop
 };
 
 export default SectionCard;

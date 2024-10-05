@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
-import { Card, CardContent, Typography, Link, colors } from '@mui/material';
+import { Card, CardContent, Typography, Link, colors, Skeleton } from '@mui/material';
 import { Box } from '@mui/system';
 import CustomTable from '../ui/CustomTable';
 import { useState } from 'react';
 import CustomModal from '../ui/CustomModal';
+import { useSelector } from 'react-redux';
 
 // Styles
 const styles = {
@@ -24,15 +25,12 @@ const styles = {
         marginBottom: 2,
         paddingX: 2
     },
-    tableContainer: {
-        borderRadius: 5,
-        boxShadow: 2,
-    },
-    tableHeader: {
-        backgroundColor: '#E9E9E9',
-        borderRadius: 5,
-        fontSize: 16,
-        fontWeight: 'bold'
+    skeletonRow: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginY: 1,
+        width: '100%',
     }
 };
 
@@ -40,6 +38,8 @@ function RecentFeedbacks({ feedbacks }) {
     const [openViewAll, setOpenViewAll] = useState(false);  // State for "View all" modal
     const [openFeedbackDetail, setOpenFeedbackDetail] = useState(false);  // State for feedback detail modal
     const [selectedFeedback, setSelectedFeedback] = useState(null);  // Store clicked feedback
+
+    const feedbackLoading = useSelector((state) => state.feedbacks.loadingFeedbacks);  // Fetch loading state for feedbacks
 
     const handleClickOpenViewAll = () => setOpenViewAll(true);  // Open "View all" modal
     const handleCloseViewAll = () => setOpenViewAll(false);  // Close "View all" modal
@@ -66,27 +66,43 @@ function RecentFeedbacks({ feedbacks }) {
         ])
         : [];  // If feedbacks is not an array, fallback to an empty array
 
+    // Skeleton rows to display during loading
+    const skeletonRows = Array(3).fill().map((_, index) => (
+        <Box key={index} sx={styles.skeletonRow}>
+            <Skeleton variant="text" width="10%" height={30} />
+            <Skeleton variant="text" width="30%" height={30} />
+            <Skeleton variant="text" width="40%" height={30} />
+            <Skeleton variant="text" width="15%" height={30} />
+        </Box>
+    ));
+
     return (
         <>
             <Card sx={styles.card}>
                 <CardContent sx={styles.cardContent}>
                     <Box sx={styles.cardTitle}>
-                        <Typography variant="h4">Recent Feedbacks</Typography>
+                        <Typography sx={{color: '#4CAFF7'}} variant="h4">Recent Feedbacks</Typography>
                         <Link href="#" variant="body2" onClick={handleClickOpenViewAll}>
                             View all
                         </Link>
                     </Box>
 
-                    {(feedbacks?.length === 0 || feedbacks == null) ? (
-                            <Typography variant='body2' sx={{
-                                textAlign:'center',
-                                padding:4,
-                                color: colors.red[400]
-                            }}  > No Feedback received till now. </Typography>
-                        ): (
-                            <CustomTable columns={columns} rows={rows?.slice(0, 3)} onRowClick={handleRowClick} />
-                        )
-                    }
+                    {feedbackLoading ? (
+                        // Display skeleton rows while loading
+                        <Box>
+                            {skeletonRows}
+                        </Box>
+                    ) : feedbacks?.length === 0 || feedbacks == null ? (
+                        // Display message if no feedback is available
+                        <Typography variant='body2' sx={{
+                            textAlign:'center',
+                            padding:4,
+                            color: colors.red[400]
+                        }}  > No Feedback received till now. </Typography>
+                    ) : (
+                        // Display the actual feedback table once loading is done
+                        <CustomTable columns={columns} rows={rows?.slice(0, 3)} onRowClick={handleRowClick} />
+                    )}
                 </CardContent>
             </Card>
 
@@ -97,7 +113,20 @@ function RecentFeedbacks({ feedbacks }) {
                 title="All Feedbacks"
                 showSearch={false}  // Enable search in the "View all" modal
             >
-                <CustomTable columns={columns} rows={rows} onRowClick={handleRowClick} />  {/* Display all feedbacks in the modal, with row click handler */}
+                {feedbackLoading ? (
+                    // Display skeleton rows inside the modal during loading
+                    <Box>
+                        {skeletonRows}
+                    </Box>
+                ) : feedbacks?.length === 0 ? (
+                    <Typography variant='body2' sx={{
+                        textAlign:'center',
+                        padding:4,
+                        color: colors.red[400]
+                    }}  > No Feedback received till now. </Typography>
+                ) : (
+                    <CustomTable columns={columns} rows={rows} onRowClick={handleRowClick} />  
+                )}
             </CustomModal>
 
             {/* Modal for feedback detail when a row is clicked */}
@@ -107,7 +136,13 @@ function RecentFeedbacks({ feedbacks }) {
                 title="Feedback Details"
                 showSearch={false}  // Disable search in the row click modal
             >
-                {selectedFeedback ? (
+                {feedbackLoading ? (
+                    <Box sx={{ padding: 2 }}>
+                        <Skeleton variant="text" width="80%" height={30} />
+                        <Skeleton variant="text" width="100%" height={80} sx={{ marginY: 2 }} />
+                        <Skeleton variant="text" width="40%" height={30} />
+                    </Box>
+                ) : selectedFeedback ? (
                     <Box sx={{padding:2, gap:2}} >
                         <Typography variant="body1"><strong>Name:</strong> {selectedFeedback[1]}</Typography>
                         <Typography

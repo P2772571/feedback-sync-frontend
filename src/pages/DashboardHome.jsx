@@ -27,13 +27,18 @@ function DashboardHome() {
   const managerAssignedGoals = useSelector((state) => state.goals.managerAssignedGoals);
   const role = user?.roles[0] || undefined
   const userGoals = useSelector((state) => state.goals.userGoals)
+  const pips = useSelector((state) => state.pips.pips)
 
+  // Fetch Loading from Redux
+  const usersLoading = useSelector((state) => state.users.loading)
+  const feedbacksLoading = useSelector((state) => state.feedbacks.loadingFeedbacks)
+  const goalsLoading = useSelector((state) => state.goals.loading)
+  const pipsLoading = useSelector((state) => state.pips.loading)
+  
   return (
     <>
       <TitleBar title={title} />
-
       <Greeting title={"Osama"} />
-
       <Box
         sx={{
           display: 'flex',
@@ -45,10 +50,10 @@ function DashboardHome() {
         {role === "EMPLOYEE" ? (
         <>
           <Box sx={{ flex: 1 }}>
-          <SectionCard title={'Active Goals'} items={userGoals} />
+          <SectionCard title={'Active Goals'} items={userGoals} loading={goalsLoading} />
         </Box>
         <Box sx={{ flex: 1 }}>
-          <SectionCard title={'Active Pips'} items={pips} />
+          <SectionCard title={'Active Pips'} items={pips} loading ={pipsLoading} />
         </Box>
         </>
         ) : (
@@ -59,23 +64,17 @@ function DashboardHome() {
             gap: '10px',
             flex: 1,
           }} >
-            <SingleInfoCard title="Employees" value={users.length}  />
-            <SingleInfoCard title="Recieved Feedbacks" value={feedbacks?.received?.length} />
-            <SingleInfoCard title="Given Feedbacks" value={feedbacks?.given?.length} />
-            <SingleInfoCard title="Assigned Goals" value={managerAssignedGoals?.length} />
-            <SingleInfoCard title="Assigned PIPs" value={2} />
-
-
+            <SingleInfoCard title="Employees" value={users?.length} loading={usersLoading}  />
+            <SingleInfoCard title="Recieved Feedbacks" value={feedbacks?.received?.length} loading={feedbacks} />
+            <SingleInfoCard title="Given Feedbacks" value={feedbacks?.given?.length} loading={feedbacks} />
+            <SingleInfoCard title="Assigned Goals" value={managerAssignedGoals?.length} loading={goalsLoading} />
+            <SingleInfoCard title="Assigned PIPs" value={pips?.length} loading={pipsLoading} />
           </Box>
         )}
-
-
       </Box>
 
       {/* Recent Assignned Goals */}
-
-
-      <RecentFeedbacks feedbacks={feedbacks?.received} />
+      <RecentFeedbacks feedbacks={feedbacks?.received} loading={feedbacksLoading} />
     </>
   )
 }

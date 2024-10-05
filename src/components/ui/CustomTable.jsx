@@ -21,7 +21,7 @@ const styles = {
     tableRow: {
         cursor: 'pointer',  // Make rows clickable
         '&:hover': {
-            backgroundColor: '#E0E0E0',  // Hover effect to indicate clickable rows
+            backgroundColor: '#F0F0F0',  // Hover effect to indicate clickable rows
         }
     },
 

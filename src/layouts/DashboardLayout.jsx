@@ -7,28 +7,29 @@ import { fetchProfile } from '../redux/profileSlice';
 import { fetchAllUsers, fetchAllManagedUsers } from '../redux/userSlice';
 import { fetchFeedbacks } from '../redux/feedbackSlice';
 import { fetchGoalsAssignedByManager, fetchGoalsOfUser, fetchAssignedGoalsToUser } from '../redux/goalSlice';
+import { fetchAllPipsAssignedByManager, fetchAllPipsCreateByManager } from '../redux/pipSlice';
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
   
   // Get user and profile from Redux
   const user = useSelector((state) => state.auth.user);
-  const profileLoading = useSelector((state) => state.profile.loading); // Profile loading state
   const usersLoading = useSelector((state) => state.users.loading); // Users loading state
-  const profile = useSelector((state) => state.profile.profile);
+  const profile = useSelector((state) => state.profile.loading);
   const goalsLoadig = useSelector((state) => state.goals.loading)
-  const feedbackLoading = useSelector((state) => state.feedbacks.loading);
+
   const users = useSelector((state) => state.users.users);
   const feedbacks = useSelector((state) => state.feedbacks.feedbacks);
+  const pipLoading = useSelector((state) => state.pips.loading)
 
   
   // Derived loading state (when either profile or users are loading)
-  const loading = profileLoading || usersLoading  || feedbackLoading  || goalsLoadig;
+  const loading =  pipLoading
 
 
   useEffect(() => {
     // Fetch profile when the component mounts
-    dispatch(fetchProfile());
+    
 
     // If user data is available, fetch users based on role
     if (user && user.roles && user.id) {
@@ -37,40 +38,36 @@ const DashboardLayout = () => {
       } else if (user.roles.includes('EMPLOYEE')) {
         dispatch(fetchAllUsers());
       }
+    }
 
       if (user.id){
-        // Fetch feedbacks
+    //     // Fetch feedbacks
         dispatch(fetchFeedbacks(user.id));
         if (user?.roles[0] === "MANAGER"){
           dispatch(fetchGoalsAssignedByManager(user.id))
+          dispatch(fetchAllPipsCreateByManager(user.id)).then(res =>{
+            console.log(res)
+          });
         }
         if (user?.roles[0] === "EMPLOYEE"){
           dispatch(fetchGoalsOfUser(user.id));
-          console.log("User ID:", user.id, "Manager ID:", 3);
-          dispatch(fetchAssignedGoalsToUser({ userId: user.id, managerId: 3 }))
+          dispatch(fetchAssignedGoalsToUser({ userId: user.id, managerId:3 })).then(res =>{
+            console.log(res)
+            }
+            );
+          dispatch(fetchAllPipsAssignedByManager(user.id)).then(res =>{
+            console.log(res)
+          }
+          );
+
         }
-        
       }
       
-    }
+    // }
+
+    dispatch(fetchProfile());
+
   }, [dispatch, user, user.id, user.roles]);
-
-  // If still loading, show a spinner/loader
-  if (loading || !profile || !users || !user || !feedbacks ) {
-
-    return (
-      <Box 
-        sx={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          height: '100vh' 
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
 
   // Render the dashboard layout once loading is done
   return (

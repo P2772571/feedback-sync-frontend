@@ -1,5 +1,3 @@
-
-
 import { List, ListItem, ListItemText, ListItemIcon, Box } from '@mui/material';
 import { Dashboard, Feedback, Assignment, Person, People } from '@mui/icons-material';
 import { NavLink } from 'react-router-dom';
@@ -7,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 const SidebarMain = () => {
   const user = useSelector((state) => state.auth.user);  // Fetch the user from Redux store
-  const role = user?.roles[0]?.toLowerCase() || '';  // Extract the role and make it lowercase, handle undefined
+  const role = user?.roles?.[0]?.toLowerCase() || '';  // Extract the role and make it lowercase, handle undefined
 
   // Define the role-based menu structure
   const menuItems = {
@@ -31,21 +29,21 @@ const SidebarMain = () => {
     ]
   };
 
-  const itemsToDisplay = menuItems[role] || [];
+  const itemsToDisplay = menuItems[role] || [];  // Get the menu items for the user's role
 
   return (
-    <Box sx={{ paddingX:4 , paddingY:2 , textAlign: 'center', backgroundColor: "#f8f8f8", height: '100%', borderRadius: 5 }}>
+    <Box sx={{ paddingX: 4, paddingY: 2, textAlign: 'center', backgroundColor: "#f8f8f8", height: '100%', borderRadius: 5 }}>
       <List>
         {itemsToDisplay.map((item, index) => (
           <ListItem
             button
             component={NavLink}
             to={item.path}
-            state={{ title:item.name}}
+            state={{ title: item.name }}
             key={index}
             end
             sx={{
-              color: '#878787',  // Default color
+              color: '#878787',  // Default color for text and icon
               borderRadius: '8px',
               '&:hover': {
                 backgroundColor: '#CECECE',  // Hover background
@@ -53,10 +51,8 @@ const SidebarMain = () => {
               mb: 1,  // Adds margin between the items
               '&.active': {
                 color: '#4CAFF7',  // Active color for text and icon
-                // backgroundColor: '#f0f8ff',  // Active background color
               },
             }}
-            // Using className to easily apply active styles based on NavLink's active state
             className={({ isActive }) => (isActive ? 'active' : '')}
           >
             <ListItemIcon sx={{ color: 'inherit' }}>  {/* Icon color will follow text */}
