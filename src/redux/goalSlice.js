@@ -143,7 +143,8 @@ const initialState = {
     assignedGoals: [],            // Stores goals assigned to the user
     managerAssignedGoals: [],     // Stores goals assigned by the manager to other employees
     currentGoal: null,            // Stores the current goal being viewed or edited
-    loading: false,               // Loading state for async actions
+    loading: false,
+    taskLoading:false,               // Loading state for async actions
     error: null                   // Stores any error messages
 };
 
@@ -305,7 +306,7 @@ const goalSlice = createSlice({
 
             // Create a new task
             .addCase(createTask.pending, (state) => {
-                state.loading = true;
+                state.taskLoading = true;
                 state.error = null;
             })
             .addCase(createTask.fulfilled, (state, action) => {
@@ -334,16 +335,16 @@ const goalSlice = createSlice({
                 }}
 
 
-                state.loading = false;
+                state.taskLoading = false;
             })
             .addCase(createTask.rejected, (state, action) => {
                 state.error = action.payload;
-                state.loading = false;
+                state.taskLoading = false;
             })
 
             // Update an existing task
             .addCase(updateTask.pending, (state) => {
-                state.loading = true;
+                state.taskLoading = true;
                 state.error = null;
             })
             .addCase(updateTask.fulfilled, (state, action) => {
@@ -378,16 +379,16 @@ const goalSlice = createSlice({
                         );
                     }
                 }
-                state.loading = false;
+                state.taskLoading = false;
             })
             .addCase(updateTask.rejected, (state, action) => {
                 state.error = action.payload;
-                state.loading = false;
+                state.taskLoading = false;
             })
 
             // Delete a task
             .addCase(deleteTask.pending, (state) => {
-                state.loading = true;
+                state.taskLoading = true;
                 state.error = null;
             })
             .addCase(deleteTask.fulfilled, (state, action) => {
@@ -413,11 +414,11 @@ const goalSlice = createSlice({
                         goal.tasks = goal.tasks.filter(task => task.taskId !== deletedTaskId);
                     });
                 }
-                state.loading = false;
+                state.taskLoading = false;
             })
             .addCase(deleteTask.rejected, (state, action) => {
                 state.error = action.payload;
-                state.loading = false;
+                state.taskLoading = false;
             })
 
     }

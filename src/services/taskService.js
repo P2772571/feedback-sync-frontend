@@ -4,7 +4,10 @@ import axiosInstance from "../config/axiosConfig";
 
 // -------------------- Create Task API Call --------------------
 export const createTaskAPI = async (taskRequest) => {
+    console.log("Create Task Request at api",taskRequest)
     const response = await axiosInstance.post('api/tasks', taskRequest);
+    
+    console.log("Create Task Response",response)    
     return response.data;  // Return the response, which includes user data and token
 };
 
@@ -17,6 +20,8 @@ export const createTaskAPI = async (taskRequest) => {
 // -------------------- Update Task API Call --------------------
 export const updateTaskAPI = async (taskId,taskRequest) => {
     const response = await axiosInstance.put('api/tasks/'+taskId, taskRequest);
+    console.log("Response is: ", response)
+    
     return response.data;  // Return the response, which includes user data and token
 };
 

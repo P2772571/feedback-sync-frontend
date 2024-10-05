@@ -62,7 +62,7 @@ export const deleteProfile = createAsyncThunk(
 
 // -------------------- Initial State --------------------
 const initialState = {
-  profile: null,  // Initially, profile is set to null
+  profile: [],  // Initially, profile is set to null
   loading: false,
   error: null,
 };

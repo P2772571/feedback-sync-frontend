@@ -31,3 +31,6 @@ export const getProfileByIdAPI = async (id) => {
     const response = await axiosInstance.get(`api/profile/${id}`);
     return response.data;  // Return the response, which includes user data and token
 };  // Service for getting a profile by ID
+
+
+
