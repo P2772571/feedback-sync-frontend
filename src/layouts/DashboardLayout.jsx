@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';  // To render nested routes
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProfile } from '../redux/profileSlice';
-import { fetchAllUsers, fetchAllManagedUsers } from '../redux/userSlice';
+import { fetchAllUsers, fetchAllManagedUsers, fetchAllUserForAdmin } from '../redux/userSlice';
 import { fetchFeedbacks } from '../redux/feedbackSlice';
 import { fetchGoalsAssignedByManager, fetchGoalsOfUser, fetchAssignedGoalsToUser } from '../redux/goalSlice';
 import { fetchAllPipsAssignedByManager, fetchAllPipsCreateByManager } from '../redux/pipSlice';
@@ -24,7 +24,6 @@ const DashboardLayout = () => {
 
   
   // Derived loading state (when either profile or users are loading)
-  const loading =  pipLoading
 
 
   useEffect(() => {
@@ -60,6 +59,9 @@ const DashboardLayout = () => {
           }
           );
 
+        }
+        if (user?.roles[0] === "ADMIN"){
+          dispatch(fetchAllUserForAdmin());
         }
       }
       

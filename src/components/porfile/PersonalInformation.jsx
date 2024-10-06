@@ -115,7 +115,7 @@ function PersonalInformation({ user, profile }) {
         backgroundColor: '#ffffff',
       }}
     >
-      <Typography variant="h4" sx={{ marginBottom: 3, fontWeight: 'bold' }}>
+      <Typography variant="h4" sx={{ marginBottom: 3, fontWeight: 'bold', color:'#4CAFF7' }}>
         Personal Information
       </Typography>
 

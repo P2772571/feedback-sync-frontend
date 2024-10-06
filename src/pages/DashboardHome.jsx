@@ -8,14 +8,6 @@ import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import SingleInfoCard from '../components/dashboard/SingleInfoCard';
 
-const pips = [
-  { title: 'Improve Time Management', progress: 20, dueDate: '2024-09-30' },
-  { title: 'Reduce Coding Errors by 25%', progress: 50, dueDate: '2024-10-10' },
-  { title: 'Increase Team Collaboration', progress: 35, dueDate: '2024-10-20' },
-  { title: 'Enhance Documentation Practices', progress: 40, dueDate: '2024-10-15' },
-  { title: 'Meet Project Deadlines Consistently', progress: 65, dueDate: '2024-11-01' }
-];
-
 
 
 function DashboardHome() {
@@ -47,7 +39,7 @@ function DashboardHome() {
         }}
 
       >
-        {role === "EMPLOYEE" ? (
+        {role === "EMPLOYEE"  && (
         <>
           <Box sx={{ flex: 1 }}>
           <SectionCard title={'Active Goals'} items={userGoals} loading={goalsLoading} />
@@ -56,7 +48,8 @@ function DashboardHome() {
           <SectionCard title={'Active Pips'} items={pips} loading ={pipsLoading} />
         </Box>
         </>
-        ) : (
+        )}
+        {role === "MANAGER" && (
           <Box  sx={{
             display: 'flex',
             flexDirection: 'row',
@@ -71,6 +64,23 @@ function DashboardHome() {
             <SingleInfoCard title="Assigned PIPs" value={pips?.length} loading={pipsLoading} />
           </Box>
         )}
+
+        {role === "ADMIN" && (
+          <Box  sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent:'space-between',
+            gap: '10px',
+            flex: 1,
+          }} >
+            <SingleInfoCard title="Employees" value={users?.length} loading={usersLoading}  />
+            <SingleInfoCard title="Recieved Feedbacks" value={feedbacks?.received?.length} loading={feedbacks} />
+            <SingleInfoCard title="Given Feedbacks" value={feedbacks?.given?.length} loading={feedbacks} />
+            <SingleInfoCard title="Assigned Goals" value={managerAssignedGoals?.length} loading={goalsLoading} />
+            <SingleInfoCard title="Assigned PIPs" value={pips?.length} loading={pipsLoading} />
+          </Box>
+        )}
+        
       </Box>
 
       {/* Recent Assignned Goals */}

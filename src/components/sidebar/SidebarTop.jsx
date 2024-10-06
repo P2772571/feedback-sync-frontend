@@ -10,11 +10,6 @@ const SidebarTop = () => {
   const loading = userLoading || profileLoading;  // Combined loading state for user and profile
   const role = user?.roles?.[0]?.toLowerCase() || 'Guest';
 
-  console.log("User:", user);
-  console.log("Profile:", profile);
-  console.log("User loading:", userLoading);
-  console.log("Profile loading:", profileLoading);
-
   return (
     <Box 
       sx={{ 
