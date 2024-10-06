@@ -30,7 +30,7 @@ axiosInstance.interceptors.response.use(
   (error) => {
     // Handle response errors here (e.g., token expiration)
     if (error.response) {
-      console.error("Response error: ", error.response.data);  // Log response error data
+      console.error("Response error: ", error.response);  // Log response error data
       
       if (error.response.status === 401) {
         // Handle unauthorized access (e.g., force logout)
@@ -46,6 +46,8 @@ axiosInstance.interceptors.response.use(
       }
     } else {
       console.error("Network error: ", error);  // Log network error
+       // Redirect to error page
+
     }
     
     return Promise.reject(error);

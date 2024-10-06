@@ -1,6 +1,6 @@
 // src/slices/profileSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { createProfileAPI, updateProfileAPI, getProfileAPI, deleteProfileAPI } from '../services/profileService';
+import { createProfileAPI, updateProfileAPI, getProfileAPI, deleteProfileAPI, assignEmployeeAPI } from '../services/profileService';
 
 // -------------------- Async Thunks --------------------
 
@@ -60,12 +60,28 @@ export const deleteProfile = createAsyncThunk(
   }
 );
 
+// -------------------- Assign Employee Thunk --------------------
+export const assignEmployee = createAsyncThunk(
+  'profile/assignEmployee',
+  async ({ manager, employee }, thunkAPI) => {
+    try {
+      const response = await assignEmployeeAPI(manager.userId, employee.userId); // Call the assign employee service
+      return response; // Return the response after assigning employee
+    } catch (error) {
+      console.log("Error", error);
+      return thunkAPI.rejectWithValue(error.response?.data?.message || 'Failed to assign employee');
+    }
+  }
+);
+
 // -------------------- Initial State --------------------
 const initialState = {
   profile: [],  // Initially, profile is set to null
   loading: false,
   error: null,
 };
+
+
 
 // -------------------- Profile Slice --------------------
 const profileSlice = createSlice({
@@ -133,6 +149,21 @@ const profileSlice = createSlice({
         state.loading = false;
       })
       .addCase(deleteProfile.rejected, (state, action) => {
+        state.error = action.payload; // Store error message
+        state.loading = false;
+      });
+    
+    // Handle assign employee async thunk
+    builder
+      .addCase(assignEmployee.pending, (state) => {
+        state.loading = true;
+        state.error = null; // Clear previous errors
+      })
+      .addCase(assignEmployee.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(assignEmployee.rejected, (state, action) => {
+        console.log("Error", action.payload);
         state.error = action.payload; // Store error message
         state.loading = false;
       });

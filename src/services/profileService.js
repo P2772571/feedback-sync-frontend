@@ -32,5 +32,20 @@ export const getProfileByIdAPI = async (id) => {
     return response.data;  // Return the response, which includes user data and token
 };  // Service for getting a profile by ID
 
+// -------------------- Get Profile API Call --------------------
+export const getProfileByUserIdAPI = async (id) => {
+    const response = await axiosInstance.get(`api/profile/user/${id}`);
+    return response.data;  // Return the response, which includes user data and token
+};  // Service for getting a profile by user ID
+
+// -------------------- Assign employees to Manager --------------------
+export const assignEmployeeAPI= async (managerId, employeeeId) => {
+    console.log("Assigning Employee", managerId, employeeeId);
+    
+    const response = await axiosInstance.put('api/profile/assign/'+managerId+'/'+employeeeId);
+    
+    return response.data;  // Return the response, which includes user data and token
+};  // Service for assigning employees to manager
+
 
 
