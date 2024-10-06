@@ -197,8 +197,8 @@ export default function Login() {
           )}
         </Formik>
 
-        {/* Forgotten password and registration links */}
-        <Box sx={{ marginTop: theme.spacing(4) }}>
+    
+        {/* <Box sx={{ marginTop: theme.spacing(4) }}>
           <Typography variant="body3"  sx={{
             color:'#787878',
             fontSize:14
@@ -223,7 +223,7 @@ export default function Login() {
               Click here
             </Typography>
           </Typography>
-        </Box>
+        </Box> */}
       </Card>
     </Box>
   );

@@ -22,11 +22,11 @@ export const logoutUserAPI = async () => {
 // -------------------- Forgot-Password API Call ------------------------
 // Service for forgot password (sending reset email)
 export const forgotPasswordAPI = (email) => {
-  return axios.post('public/api/auth/forgot-password', { email });  
+  return axiosInstance.post('public/api/auth/forgot-password', { email });  
 };
 
 // -------------------- Reset-Password API Call ------------------------
 // Service for forgot password (sending reset email)
 export const resetPasswordAPI = (data) => {
-  return axios.post('public/api/auth/reset-password', data);
+  return axiosInstance.post('public/api/auth/reset-password', data);
 };

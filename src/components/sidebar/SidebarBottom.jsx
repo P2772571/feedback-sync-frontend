@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';  // For programmatic navigation
 
 const SidebarBottom = () => {
   const dispatch = useDispatch();
+
+
   const navigate = useNavigate();
 
   const handleLogout = () => {

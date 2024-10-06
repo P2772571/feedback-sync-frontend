@@ -8,14 +8,19 @@ const axiosInstance = axios.create({
   },
 });
 
-// Interceptor for setting Authorization header on requests (if needed for authenticated routes)
+// Interceptor for setting Authorization header on requests
 axiosInstance.interceptors.request.use((config) => {
   const user = JSON.parse(localStorage.getItem('user'));  // Retrieve user data from localStorage
-  if (user && user.token) {
-    config.headers['Authorization'] = `Bearer ${user.token}`;  // Attach the token to the header
+  
+  if (user && user.accessToken) {
+    
+    config.headers['Authorization'] = `Bearer ${user.accessToken}`;  // Attach the token to the header
   }
+
+  console.log("Request config: ", config);  // Log request config
   return config;
 }, (error) => {
+  console.error("Request error: ", error);  // Log request error
   return Promise.reject(error);
 });
 
@@ -24,11 +29,27 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     // Handle response errors here (e.g., token expiration)
-    if (error.response && error.response.status === 401) {
-      // Optional: handle unauthorized access (e.g., force logout)
-      localStorage.removeItem('user');  // Clear the token if unauthorized
-      window.location.href = '/login';  // Redirect to login
+    if (error.response) {
+      console.error("Response error: ", error.response);  // Log response error data
+      
+      if (error.response.status === 401) {
+        // Handle unauthorized access (e.g., force logout)
+        localStorage.removeItem('user');  // Clear the token if unauthorized
+        window.location.href = '/login';  // Redirect to login
+        console.log("Unauthorized access: Please log in to access this resource.");
+      } else if (error.response.status === 403) {
+        console.error("Forbidden access: You don't have permission to perform this action.");
+        // Handle forbidden access accordingly
+      } else if (error.response.status === 404) {
+        console.error("Not found: The requested resource was not found.");
+        // Handle not found error accordingly
+      }
+    } else {
+      console.error("Network error: ", error);  // Log network error
+       // Redirect to error page
+
     }
+    
     return Promise.reject(error);
   }
 );
