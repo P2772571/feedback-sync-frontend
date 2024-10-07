@@ -225,7 +225,7 @@ const feedbackSlice = createSlice({
             })
             .addCase(createFeedbackRequest.fulfilled, (state, action) => {
                 state.loadingFeedbackRequests = false;
-                state.feedbackRequests.push(action.payload);
+                // state.feedbackRequests.push(action.payload);
             })
             .addCase(createFeedbackRequest.rejected, (state, action) => {
                 state.loadingFeedbackRequests = false;

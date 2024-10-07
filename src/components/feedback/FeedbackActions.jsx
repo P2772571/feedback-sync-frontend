@@ -118,9 +118,9 @@ const FeedbackActions = ({ users }) => {
       requesteeId: selectedUser,
       requesterId: user.id,
     };
-    createFeedbackRequest(body)
+    dispatch(createFeedbackRequest(body))
       .then(() => {
-        console.log('Feedback Request submitted:', selectedUser);
+        console.log('Feedback request submitted:', selectedUser);
         handleCloseModal();
       })
       .catch((error) => {

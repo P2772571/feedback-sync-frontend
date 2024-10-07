@@ -51,7 +51,7 @@ function SectionCard({ title, items, loading}) {
                             <Skeleton variant="rectangular" width="100%" height={80} sx={{ borderRadius: 5 }} />
                         </>
                     ) : (
-                        items?.slice(0, 2).map((item, index) => (
+                        items?.slice(0, 2)?.map((item, index) => (
                             <CardItem
                                 key={index}
                                 title={item?.goalName || item?.title}
@@ -77,12 +77,12 @@ function SectionCard({ title, items, loading}) {
                         <Skeleton variant="rectangular" width="100%" height={80} sx={{ borderRadius: 1 }} />
                     </>
                 ) : (
-                    items.map((item, index) => (
+                    items?.map((item, index) => (
                         <CardItem
                             key={index}
-                            title={item.goalName || item.title}
-                            progress={item.progress}
-                            dueDate={item.dueDate}
+                            title={item?.goalName || item?.title}
+                            progress={item?.progress}
+                            dueDate={item?.dueDate}
                         />
                     ))
                 )}
